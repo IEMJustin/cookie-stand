@@ -1,109 +1,87 @@
+'use strict'
 // What variables do I need?
 // storehours, location, 
 let hours = [ '6:00 am', '7:00 am', '8:00 am', '9:00 am', '10:00 am', '11:00 am', '12:00 am', '1:00 pm', '2:00 pm', '3:00 pm', '4:00 pm', '5:00 pm', '6:00 pm', '7:00 pm'];
+let locations = []
 // store locations in array
 
-let seattleAvg = [];
-let tokyoAvg = [];
-let dubaiAvg = [];
-let parisAvg = [];
-let limaAvg = []
+//var seattleCookie = [];
+//let tokyoCookie = [];
+//let dubaiCookie = [];
+//let parisCookie = [];
+//let limaCookie = [];
 
-let seattle = {
-    minCustomers: 23,
-    maxCustomers: 65,
-    avgCookies: 6.3,
-    getRandomCust: function() {
-        return Math.floor(Math.random() * this.maxCustomers);
-    }
+function cookieStore(location, minCustomers, maxCustomers, avgCookiePerCust, getRandomCust){
+    this.location = location,
+    this.minCustomers = minCustomers,
+    this.maxCustomers = maxCustomers,
+    this.avgCookiePerCust = avgCookiePerCust,
+    this.hourlyTotal = [],
+    this.dayTotal = 0;
+    locations.push(this); 
+
+this.getRandomCust = function() {
+    return Math.floor(Math.random() * (this.maxCustomers - this.minCustomers + 1)) + this.minCustomers;
 };
-// grab random value generated and use for loop to get per hour
-document.write("SEATTLE" + "<br>");
 
-for (let i = 0; i < hours.length; i++) {
-    seattleHourly = seattle.getRandomCust() * seattle.avgCookies;
-//    console.log(seattle.getRandomCust());
-    seattleAvg = seattleHourly;
-    document.write(hours[i] + "<br>" + seattleAvg + "<br>" + "<br>");
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////
-let tokyo = {
-    minCustomers: 3,
-    maxCustomers: 24,
-    avgCookies: 1.2,
-    getRandom: function() {
-        return Math.floor(Math.random() * this.maxCustomers);
-    }
-};
-//console.log(tokyo);
-document.write("<br>" + "TOKYO" + "<br>");
-
-for (let i = 0; i < hours.length; i++) {
-    tokyoHourly = tokyo.getRandom() * tokyo.avgCookies;
-    tokyoAvg = tokyoHourly;
-    document.write(hours[i] + "<br>" + tokyoAvg + "<br>" + "<br>");
-}
-
-let dubai = {
-    minCustomers: 11,
-    maxCustomers: 38,
-    avgCookies: 3.7,
-    getRandom: function() {
-        return Math.floor(Math.random() * this.maxCustomers);
+this.sumOfHourlyTotal = function() {
+    for (var i = 0; i < hours.length; i++) {
+        this.hourlyTotal.push(Math.floor(this.avgCookiePerCust * this.getRandomCust()));
+        this.dayTotal += this.hourlyTotal[i];
+ //       console.log(this.dayTotal)
     }
 };
 
-document.write("<br>" + "DUBAI" + "<br>");
+this.dataStorage = function() {
+    this.sumOfHourlyTotal();
 
-for (let i = 0; i < hours.length; i++) {
-    dubaiHourly = dubai.getRandom() * dubai.avgCookies;
-    dubaiAvg = dubaiHourly;
-    document.write(hours[i] + "<br>" + dubaiAvg + "<br>" + "<br>");
-}
+    let rows = document.createElement('tr');
+    let storeLocation = document.createElement('th');
+    storeLocation.textContent = this.location;
+    rows.appendChild(location);
 
-let paris = {
-    minCustomers: 20,
-    maxCustomers: 38,
-    avgCookies: 2.3,
-    getRandom: function() {
-        return Math.floor(Math.random() * this.maxCustomers);
+    for(var i = 0; i < hours.length; i++){
+        var cookies = document.createElement('td');
+        cookies.textContent = this.hourlyTotal;
+        rows.appendChild(totalCookies);
+        tab1.appendChild(row);
     }
 };
 
-document.write("<br>" + "PARIS" + "<br>");
+let seattle = new cookieStore("Seattle", 23, 65, 6.3, this.location.sumOfHourlyTotal);
+let tokyo = new cookieStore("Tokyo",3, 24, 1.2, this.location.sumOfHourlyTotal );
+let dubai = new cookieStore("Dubai", 11, 38, 3.7, this.location.sumOfHourlyTotal);
+let paris = new cookieStore("Paris", 20, 38, 2.3, this.location.sumOfHourlyTotal);
+let lima = new cookieStore("Lima", 2, 16, 4,6, this.location.sumOfHourlyTotal);
+
+// ~GOOSFRABA~
+
+let tab1 = document.createElement('table');
+let headerRow = document.createElement('thead');
+
+let emptyCells = document.createElement('td');
+emptyCells.setAttribute('class', 'empty');
+headerRow.appendChild(emptyCells);
 
 for (let i = 0; i < hours.length; i++) {
-    parisHourly = paris.getRandom() * paris.avgCookies;
-    parisAvg = parisHourly;
-//    console.log(paris.getRandom());
-    document.write(hours[i] + "<br>" + parisAvg + "<br>" + "<br>");
+    let td = document.createElement('td');
+    td.setAttribute('td', 'cell');
+    td.setAttribute('td', 'hours');
+    td.innerHTML = hours[i];
+    headerRow.appendChild(td);
+};
+let dayTotal = document.createElement('th');
+dayTotal.textContent = 'Total';
+headerRow.appendChild(dayTotal);
+tab1.appendChild(headRow);
+
+function displayStoreLoc() {
+    for (var i = 0; i < locations.length; i++) {
+        locations[i].displayData();
+    }
+}
+displayStoreLoc();
+document.body.appendChild(tab1);
 }
 
-let lima = {
-    minCustomers: 2,
-    maxCustomers: 16,
-    avgCookies: 4.6,
-    getRandom: function() {
-        return Math.floor(Math.random() * this.maxCustomers);
-    },
-};
-
-document.write("<br>" + "LIMA" + "<br>")
-
-for (let i = 0; i < hours.length; i++) {
-    limaHourly = lima.getRandom() * lima.avgCookies;
-    limaAvg = limaHourly;
-    document.write(hours[i] + "<br>" + limaAvg + "<br>" + "<br>");
-};
-
-function cookieArray() {
-    seattleAvg.push(seattleAvg);
-    console.log(cookieArray())
-}
-
-// seattleAvg = seattleCookie[];
-// tokyoAvg = tokyoCookie[];
-// dubaiAvg = dubaiCookie[];
-// parisAvg = parisCookie[];
-// limaAvg = limaCookie[];
+// Why arent values getting picked up
