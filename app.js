@@ -1,87 +1,67 @@
 'use strict'
-// What variables do I need?
-// storehours, location, 
-let hours = [ '6:00 am', '7:00 am', '8:00 am', '9:00 am', '10:00 am', '11:00 am', '12:00 am', '1:00 pm', '2:00 pm', '3:00 pm', '4:00 pm', '5:00 pm', '6:00 pm', '7:00 pm'];
-let locations = []
-// store locations in array
 
-//var seattleCookie = [];
-//let tokyoCookie = [];
-//let dubaiCookie = [];
-//let parisCookie = [];
-//let limaCookie = [];
+let Seattle = new store('Seattle', 23, 65, 6.3);
+let Tokyo = new store('Tokyo', 3, 24, 1.2);
+let Dubai = new store('Dubai', 11, 38, 3.7);
+let Paris = new store('Paris', 20, 38, 2.3);
+let Lima = new store('Lima', 2, 16, 4.6);
 
-function cookieStore(location, minCustomers, maxCustomers, avgCookiePerCust, getRandomCust){
-    this.location = location,
-    this.minCustomers = minCustomers,
-    this.maxCustomers = maxCustomers,
-    this.avgCookiePerCust = avgCookiePerCust,
-    this.hourlyTotal = [],
-    this.dayTotal = 0;
-    locations.push(this); 
+function store(city, minCustomer, maxCustomer, avgSales) {
+    this.city = city;
+    this.minCustomer = minCustomer;
+    this.maxCustomer = maxCustomer;
+    this.avgSales = avgSales;
+    this.hourlySales = [];
 
-this.getRandomCust = function() {
-    return Math.floor(Math.random() * (this.maxCustomers - this.minCustomers + 1)) + this.minCustomers;
-};
-
-this.sumOfHourlyTotal = function() {
-    for (var i = 0; i < hours.length; i++) {
-        this.hourlyTotal.push(Math.floor(this.avgCookiePerCust * this.getRandomCust()));
-        this.dayTotal += this.hourlyTotal[i];
- //       console.log(this.dayTotal)
+    for(let i = 0; i < 14; i++) {
+        let hourlySalesNumber = Math.round((Math.floor(Math.random() * (maxCustomer - minCustomer + 1)) + minCustomer) * avgSales);
+        this.hourlySales.push(hourlySalesNumber)
     }
-};
 
-this.dataStorage = function() {
-    this.sumOfHourlyTotal();
-
-    let rows = document.createElement('tr');
-    let storeLocation = document.createElement('th');
-    storeLocation.textContent = this.location;
-    rows.appendChild(location);
-
-    for(var i = 0; i < hours.length; i++){
-        var cookies = document.createElement('td');
-        cookies.textContent = this.hourlyTotal;
-        rows.appendChild(totalCookies);
-        tab1.appendChild(row);
-    }
-};
-
-let seattle = new cookieStore("Seattle", 23, 65, 6.3, this.location.sumOfHourlyTotal);
-let tokyo = new cookieStore("Tokyo",3, 24, 1.2, this.location.sumOfHourlyTotal );
-let dubai = new cookieStore("Dubai", 11, 38, 3.7, this.location.sumOfHourlyTotal);
-let paris = new cookieStore("Paris", 20, 38, 2.3, this.location.sumOfHourlyTotal);
-let lima = new cookieStore("Lima", 2, 16, 4,6, this.location.sumOfHourlyTotal);
-
-// ~GOOSFRABA~
-
-let tab1 = document.createElement('table');
-let headerRow = document.createElement('thead');
-
-let emptyCells = document.createElement('td');
-emptyCells.setAttribute('class', 'empty');
-headerRow.appendChild(emptyCells);
-
-for (let i = 0; i < hours.length; i++) {
-    let td = document.createElement('td');
-    td.setAttribute('td', 'cell');
-    td.setAttribute('td', 'hours');
-    td.innerHTML = hours[i];
-    headerRow.appendChild(td);
-};
-let dayTotal = document.createElement('th');
-dayTotal.textContent = 'Total';
-headerRow.appendChild(dayTotal);
-tab1.appendChild(headRow);
-
-function displayStoreLoc() {
-    for (var i = 0; i < locations.length; i++) {
-        locations[i].displayData();
-    }
-}
-displayStoreLoc();
-document.body.appendChild(tab1);
+    let total = this.hourlySales.reduce(function(a, b) {
+        return a + b;
+    }, 0);
+    console.log(total);
 }
 
-// Why arent values getting picked up
+let hours = [0600, 0700, 0800, 0900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900];
+
+function addItemList(list, store){
+    let ul = document.getElementById(list)
+
+    for (let i = 0; i < store.hourlySales.length; i++){
+        let item = document.createElement('li')
+        let value = store.hourlySales[i]
+        item.innerText = (hours[i] + value + ' cookies')
+        ul.appendChild(item)
+    }
+    let item = document.createElement('li')
+
+    let total = store.hourlySales.reduce(function(a, b){
+        return a + b;
+    }, 0);
+
+    item.innerText = ('Total: ' + total + ' cookies')
+    ul.appendChild(item)
+}
+
+addItemList('SeattleListing', Seattle)
+addItemList('TokyoListing', Tokyo)
+addItemList('Dubai', Dubai)
+addItemList('Paris', Paris)
+addItemList('LimaList', Lima)
+
+function createTable() {
+    var x = document.createElement('table');
+    x.setAttribute('id', 'myTable');
+    document.body.appendChild(x);
+
+    var y = document.createElement('TR');
+    y.setAttribute('id', 'myTableRow');
+    document.getElementById('myTable').appendChild(y);
+
+    var z = document.createElement('TD');
+    var t = document.createTextNode("cell");
+    z.appendChild(t);
+    document.getElementById('myTr').appendChild(z);
+}
