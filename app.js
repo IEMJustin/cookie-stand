@@ -1,48 +1,110 @@
-'use strict'
+'use strict';
 
-let hours = ['0600', '0700', '0800', '0900', '1000', '1100', '1200', '1300', '1400', '1500', '1600', '1700', '1800', '1900'];
+let storeHours = ['6am', '7am', '8am', '9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm' ,'5pm', '6pm', '7pm'];
 
-
-function store(city, minCustomer, maxCustomer, avgSales) {
-    this.city = city;
-    this.minCustomer = minCustomer;
-    this.maxCustomer = maxCustomer;
-    this.avgSales = avgSales;
-    this.hourlySales = [];
-    
-    for(let i = 0; i < 14; i++) {
-        let hourlySalesNumber = Math.round((Math.floor(Math.random() * (maxCustomer - minCustomer + 1)) + minCustomer) * avgSales);
-        this.hourlySales.push(hourlySalesNumber)
-    }
-    
-    let total = this.hourlySales.reduce(function(a, b) {
-        return a + b;
-    }, 0);
-    console.log(total);
+function StoreLocation(name, minCust, maxCust, avgCookiesPerCust) {
+  this.name = name;
+  this.minCust = minCust;
+  this.maxCust = maxCust;
+  this.avgCookiesPerCust = avgCookiesPerCust;
+  this.hourlySales = [];
+  this.dailySales = 0;
+  StoreLocation.all.push(this);
 }
 
+StoreLocation.all = [];
 
-function addItemList(list, store){
-    let ul = document.getElementById(list)
+StoreLocation.prototype.calcAvgCookiesBought = function() {
+  for (let i = 0; i < storeHours.length; i++) {
+
+
+    let cookiesSales = Math.floor(this.calcRandomCookieSales());
     
-    for (let i = 0; i < store.hourlySales.length; i++){
-        let item = document.createElement('li')
-        let value = store.hourlySales[i]
-        item.innerText = (hours[i] + value + ' cookies')
-        ul.appendChild(item)
+    this.hourlySales.push(cookiesSales);    
+    this.dailySales = this.dailySales + cookiesSales;
+  }
+};
+
+StoreLocation.prototype.calcRandomCookieSales = function() {
+
+
+  return (Math.floor(Math.random() * (this.maxCust - this.minCust + 1) + this.minCust)) *  this.avgCookiesPerCust;
+};
+
+StoreLocation.prototype.renderTableRow = function() {
+
+  let parentEl = document.getElementById('sales-data');
+
+  let rowEl = document.createElement('tr');
+  
+
+  let dataEl = document.createElement('td');
+  dataEl.innerText = this.name;
+  rowEl.appendChild(dataEl);
+
+
+  for (let sale = 0; sale < this.hourlySales.length; sale++) {
+    let dataEl = document.createElement('td');
+    dataEl.innerText = this.hourlySales[sale];
+    rowEl.appendChild(dataEl);
+  }
+  
+
+  dataEl = document.createElement('td');
+  dataEl.innerText = this.dailySales;
+  rowEl.appendChild(dataEl);
+
+
+  parentEl.appendChild(rowEl);
+};
+
+let seattle = new StoreLocation('Seattle', 23, 65, 6.3);
+let lima = new StoreLocation('Lima', 18, 68, 4.1);
+let paris = new StoreLocation('Paris', 30, 40, 2.4);
+let dubai = new StoreLocation('Dubai', 1, 45, 13.5);
+let tokyo = new StoreLocation('Tokyo', 20, 25, 3.7);
+
+seattle.calcAvgCookiesBought();
+seattle.renderTableRow();
+
+lima.calcAvgCookiesBought();
+lima.renderTableRow();
+
+paris.calcAvgCookiesBought();
+paris.renderTableRow();
+
+dubai.calcAvgCookiesBought();
+dubai.renderTableRow();
+
+tokyo.calcAvgCookiesBought();
+tokyo.renderTableRow();
+
+console.log(StoreLocation.all);
+
+function renderFooter() {
+    let parentEl = document.getElementById('sales-data');
+    let rowEl = document.createElement('tr');
+
+    let dataEl = document.createElement('td');
+    dataEl.innerText = 'Totals';
+    rowEl.appendChild(dataEl);
+
+    let grandTotal = 0;
+    for (let hour = 0; hour < storeHours.length; hour ++) {
+        let dataEl = document.createElement('td');
+        let sum = 0;
+        for (let store = 0; store < StoreLocation.all.length; store++) {
+
+            sum = sum + StoreLocation.all[store].hourlySales[hour];
+            grandTotal = grandTotal + StoreLocation.all[store].hourlySales[hour];
+        }
+        dataEl.innerText = sum;
+        rowEl.appendChild(dataEl);
     }
-    let item = document.createElement('li')
-    
-    let total = store.hourlySales.reduce(function(a, b){
-        return a + b;
-    }, 0);
-    
-    item.innerText = ('Total: ' + total + ' cookies')
-    ul.appendChild(item)
+    dataEl = document.createElement('td');
+    dataEl.innerText = grandTotal;
+    rowEl.appendChild(dataEl);
+    parentE1.appendChild(rowE1);
 }
 
-let Seattle = new store('Seattle', 23, 65, 6.3);
-let Tokyo = new store('Tokyo', 3, 24, 1.2);
-let Dubai = new store('Dubai', 11, 38, 3.7);
-let Paris = new store('Paris', 20, 38, 2.3);
-let Lima = new store('Lima', 2, 16, 4.6);
+renderFooter();
