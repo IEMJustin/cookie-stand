@@ -1,110 +1,104 @@
 'use strict';
 
-let storeHours = ['6am', '7am', '8am', '9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm' ,'5pm', '6pm', '7pm'];
+let storeHours = ['0600', '0700', '0800', '0900', '0010', '1100', '1200', '1300', '1400', '1500', '1600', '1700', '1800', '1900'];
+let storeLocations = ['Seattle', 'Tokyo', 'Dubai', 'Paris', 'Lima'];
 
-function StoreLocation(name, minCust, maxCust, avgCookiesPerCust) {
-  this.name = name;
-  this.minCust = minCust;
-  this.maxCust = maxCust;
-  this.avgCookiesPerCust = avgCookiesPerCust;
-  this.hourlySales = [];
-  this.dailySales = 0;
-  StoreLocation.all.push(this);
+function Store(name, min_cus, max_cus, avgcpp) {
+    this.name = name;
+    this.min_cus = min_cus;
+    this.max_cus = max_cus;
+    this.avgcpp = avgcpp;
+    this.salesPerHour = [];
+    this.dailysales = 0;
+    Store.all.push(this);
 }
 
-StoreLocation.all = [];
+Store.all = [];
 
-StoreLocation.prototype.calcAvgCookiesBought = function() {
-  for (let i = 0; i < storeHours.length; i++) {
-
-
-    let cookiesSales = Math.floor(this.calcRandomCookieSales());
-    
-    this.hourlySales.push(cookiesSales);    
-    this.dailySales = this.dailySales + cookiesSales;
-  }
-};
-
-StoreLocation.prototype.calcRandomCookieSales = function() {
-
-
-  return (Math.floor(Math.random() * (this.maxCust - this.minCust + 1) + this.minCust)) *  this.avgCookiesPerCust;
-};
-
-StoreLocation.prototype.renderTableRow = function() {
-
-  let parentEl = document.getElementById('sales-data');
-
-  let rowEl = document.createElement('tr');
-  
-
-  let dataEl = document.createElement('td');
-  dataEl.innerText = this.name;
-  rowEl.appendChild(dataEl);
-
-
-  for (let sale = 0; sale < this.hourlySales.length; sale++) {
-    let dataEl = document.createElement('td');
-    dataEl.innerText = this.hourlySales[sale];
-    rowEl.appendChild(dataEl);
-  }
-  
-
-  dataEl = document.createElement('td');
-  dataEl.innerText = this.dailySales;
-  rowEl.appendChild(dataEl);
-
-
-  parentEl.appendChild(rowEl);
-};
-
-let seattle = new StoreLocation('Seattle', 23, 65, 6.3);
-let lima = new StoreLocation('Lima', 18, 68, 4.1);
-let paris = new StoreLocation('Paris', 30, 40, 2.4);
-let dubai = new StoreLocation('Dubai', 1, 45, 13.5);
-let tokyo = new StoreLocation('Tokyo', 20, 25, 3.7);
-
-seattle.calcAvgCookiesBought();
-seattle.renderTableRow();
-
-lima.calcAvgCookiesBought();
-lima.renderTableRow();
-
-paris.calcAvgCookiesBought();
-paris.renderTableRow();
-
-dubai.calcAvgCookiesBought();
-dubai.renderTableRow();
-
-tokyo.calcAvgCookiesBought();
-tokyo.renderTableRow();
-
-console.log(StoreLocation.all);
-
-function renderFooter() {
-    let parentEl = document.getElementById('sales-data');
-    let rowEl = document.createElement('tr');
-
-    let dataEl = document.createElement('td');
-    dataEl.innerText = 'Totals';
-    rowEl.appendChild(dataEl);
-
-    let grandTotal = 0;
-    for (let hour = 0; hour < storeHours.length; hour ++) {
-        let dataEl = document.createElement('td');
-        let sum = 0;
-        for (let store = 0; store < StoreLocation.all.length; store++) {
-
-            sum = sum + StoreLocation.all[store].hourlySales[hour];
-            grandTotal = grandTotal + StoreLocation.all[store].hourlySales[hour];
-        }
-        dataEl.innerText = sum;
-        rowEl.appendChild(dataEl);
+Store.prototype.calcavgcook = function() {
+    for (let i = 0; i < storeHours.length; i++) {
+        let rndCookSale = Math.floor(this.calcrandcook());
+        this.salesPerHour.push(rndCookSale);
+        this.dailysales = this.dailysales + rndCookSale;
     }
-    dataEl = document.createElement('td');
-    dataEl.innerText = grandTotal;
-    rowEl.appendChild(dataEl);
-    parentE1.appendChild(rowE1);
-}
+};
 
-renderFooter();
+Store.prototype.calcrandcook = function() {
+    return (Math.floor(Math.random() * (this.max_cus - this.min_cus + 1) + this.min_cus)) * this.avgcpp;
+};
+
+Store.prototype.rendtr = function() {
+    let parentElem = document.getElementById('sales_data');
+    let rowElem = document.createElement('tr');
+    let dataElem = document.createElement('td');
+    dataElem.innerText = this.name;
+    rowElem.appendChild(dataElem);
+    for (let s = 0; s < this.salesPerHour.length; s++) {
+        dataElem = document.createElement('td');
+        dataElem.innerText = this.salesPerHour[s];
+        rowElem.appendChild(dataElem);
+    }
+    dataElem = document.createElement('td');
+    dataElem.innerText = this.dailysales;
+    rowElem.appendChild(dataElem);
+    console.log(parentElem);
+    parentElem.appendChild(rowElem);
+};
+
+let Seattle = new Store('Seattle', 23, 65, 6.3);
+let Tokyo = new Store('Tokyo', 3, 24, 1.2);
+let Dubai = new Store('Dubai', 11, 38, 3.7);
+let Paris = new Store('Paris', 20, 38, 2.3);
+let Lima = new Store('Lima', 2, 16, 4.6);
+
+rendHead();
+
+for (let store = 0; store < Store.all.length; store++) {
+    let currentStore = Store.all[store];
+    currentStore.calcavgcook();
+    currentStore.rendtr();
+};
+
+function rendFoot() {
+    let parentElem = document.getElementById('sales_data');
+    let rowElem = document.createElement('tr');
+    let dataElem = document.createElement('td');
+    dataElem.innerText = 'TOTAL';
+    rowElem.appendChild(dataElem);
+
+    let grandTot = 0
+    for (let h = 0; h < storeHours.length; h++) {
+        let dataElem = document.createElement('td');
+        let sum = 0;
+        for (let store = 0; store < Store.all.length; store++) {
+            sum = sum + Store.all[store].salesPerHour[h];
+            grandTot = grandTot + Store.all[store].salesPerHour[h];
+        }
+        dataElem.innerText = sum;
+        rowElem.appendChild(dataElem);
+    }
+    dataElem = document.createElement('td');
+    dataElem.innerText = grandTot;
+    rowElem.appendChild(dataElem);
+    parentElem.appendChild(rowElem);
+};
+
+function rendHead() {
+    let parentElem = document.getElementById('sales_data');
+    let rowElem = document.createElement('tr');
+    let dataElem = document.createElement('th');
+    dataElem.innerText = ' ';
+    rowElem.appendChild(dataElem);
+    for (let i = 0; i < storeHours.length; i++) {
+        dataElem = document.createElement('th');
+        dataElem.innerText = storeHours[i];
+        rowElem.appendChild(dataElem);
+    }
+    dataElem = document.createElement('th');
+    dataElem.innerText = 'Daily Total';
+    rowElem.appendChild(dataElem);
+    parentElem.appendChild(rowElem);
+
+};
+
+rendFoot();
