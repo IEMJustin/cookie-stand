@@ -10,7 +10,28 @@
         <h2>"Less Cookies, More Salmon!"</h2>
         <img src="https://cdn.pixabay.com/photo/2013/12/22/00/53/money-shark-232034_960_720.jpg" width="400" height="400" alt="Money fish"/>
 
-        <table border="2" id="sales_data"></table>
+        
+        <div><table id="sales_data"></table>
+            <form id="updateLocForm">
+              <fieldset>
+                <legend>Update Store Locations</legend>
+                <label>Store Location</label> 
+                <input name='newLoc' type='text' required> <br>
+
+                <label>Minimum Customers Hourly</label>
+                <input name='min_cus' type='number' required> <br>
+
+                <label>Maximum Customers Hourly</label>
+                <input name='max_cus' type='number' required> <br>
+
+                <label>Avg Cookies Per Person</label>
+                <input name='avgcpp' type='number' step='0.01' required>
+
+                <button>Update Stats</button>
+              </fieldset>
+            </form>
+          </div>
+
         
         <script src="app.js"> </script>
     </body>
