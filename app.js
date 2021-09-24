@@ -53,6 +53,24 @@ let Lima = new Store('Lima', 2, 16, 4.6);
 
 rendHead();
 
+function rendHead() {
+    let parentElem = document.getElementById('sales_data');
+    let rowElem = document.createElement('tr');
+    let dataElem = document.createElement('th');
+    dataElem.innerText = ' ';
+    rowElem.appendChild(dataElem);
+    for (let i = 0; i < storeHours.length; i++) {
+        dataElem = document.createElement('th');
+        dataElem.innerText = storeHours[i];
+        rowElem.appendChild(dataElem);
+    }
+    dataElem = document.createElement('th');
+    dataElem.innerText = 'Daily Total';
+    rowElem.appendChild(dataElem);
+    parentElem.appendChild(rowElem);
+
+};
+
 for (let store = 0; store < Store.all.length; store++) {
     let currentStore = Store.all[store];
     currentStore.calcavgcook();
@@ -83,22 +101,23 @@ function rendFoot() {
     parentElem.appendChild(rowElem);
 };
 
-function rendHead() {
-    let parentElem = document.getElementById('sales_data');
-    let rowElem = document.createElement('tr');
-    let dataElem = document.createElement('th');
-    dataElem.innerText = ' ';
-    rowElem.appendChild(dataElem);
-    for (let i = 0; i < storeHours.length; i++) {
-        dataElem = document.createElement('th');
-        dataElem.innerText = storeHours[i];
-        rowElem.appendChild(dataElem);
-    }
-    dataElem = document.createElement('th');
-    dataElem.innerText = 'Daily Total';
-    rowElem.appendChild(dataElem);
-    parentElem.appendChild(rowElem);
-
-};
 
 rendFoot();
+
+let updateLocFormEl = document.getElementById('updateLocForm');
+
+function handleNewLoc(formSubmission) {
+    formSubmission.preventDefault();
+    let newLoc = formSubmission.target.newLoc.value;
+    let min_cus = formSubmission.target.min_cus.value;
+    let max_cus = formSubmission.target.max_cus.value;
+    let avgcpp = formSubmission.target.avgcpp.value;
+    let newMin_cus = parseInt(min_cus);
+    let newMax_cus = parseInt(max_cus);
+    let newAvgcpp = parseInt(avgcpp);
+    let updateLoc = new Store(this.name, newMin_cus, newMax_cus, newAvgcpp);
+    updateLoc.calcavgcook();
+    updateLoc.rendtr();
+}
+
+updateLocFormEl.addEventListener('submit', handleNewLoc);
