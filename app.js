@@ -108,7 +108,7 @@ let updateLocFormEl = document.getElementById('updateLocForm');
 
 function handleNewLoc(formSubmission) {
     formSubmission.preventDefault();
-    let newLoc = formSubmission.target.newLoc.value;
+    let name = formSubmission.target.name.value;
     let min_cus = formSubmission.target.min_cus.value;
     let max_cus = formSubmission.target.max_cus.value;
     let avgcpp = formSubmission.target.avgcpp.value;
@@ -118,6 +118,7 @@ function handleNewLoc(formSubmission) {
     let updateLoc = new Store(this.name, newMin_cus, newMax_cus, newAvgcpp);
     updateLoc.calcavgcook();
     updateLoc.rendtr();
+    updateLoc.Store();
 }
 
 updateLocFormEl.addEventListener('submit', handleNewLoc);
